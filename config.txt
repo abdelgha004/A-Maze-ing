@@ -7,6 +7,6 @@ OUTPUT_FILE=maze.txt
 PERFECT=True
 
 # ====== additional keys
-#ALGORITHM=dfs
+ALGORITHM=dfs
 #SEED=
-#DISPLAY_MODE=
+#DISPLAY_MODE=  
