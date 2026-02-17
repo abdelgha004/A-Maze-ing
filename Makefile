@@ -3,8 +3,8 @@ install:
 	pip install
 
 run:
-	@python3 a_maze_ing.py
-# 	python3 a_maze_ing.py config.txt
+# 	@python3 a_maze_ing.py
+	@python3 a_maze_ing.py config.txt
 
 debug:
 	python3 -m pdp a_maze_ing.py config.txt
