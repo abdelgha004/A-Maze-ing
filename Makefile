@@ -7,11 +7,15 @@ run:
 	@python3 a_maze_ing.py config.txt
 
 debug:
-	python3 -m pdp a_maze_ing.py config.txt
+	python3 -m pdb a_maze_ing.py config.txt
 
 clean:
-lint:
+	find . -type d -name "__pycache__" -exec rm -rf {} + 
+	find . -type d -name ".mypy_cache" -exec rm -rf {} +
+# it need to fix or remove
 
+
+lint:
 lint-strict: #optional
 
-.phony: install run debug clean lint lint-strict
+.PHONY: install run debug clean lint lint-strict
