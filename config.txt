@@ -1,12 +1,11 @@
 # ====== mandatory
-WIDTH=20
-HEIGHT=15
-ENTRY=0,0
+WIDTH=25
+HEIGHT=20
+ENTRY=1,1
 EXIT=19,14
-OUTPUT_FILE=maze.txt
+OUTPUT_FILE=output_maze.txt
 PERFECT=True
 
 # ====== additional keys
 ALGORITHM=dfs
 #SEED=
-#DISPLAY_MODE=  
