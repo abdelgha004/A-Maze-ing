@@ -1,6 +1,6 @@
 
 install:
-	pip install
+# 	pip install
 
 run:
 # 	@python3 a_maze_ing.py
