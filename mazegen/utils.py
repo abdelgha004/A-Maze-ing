@@ -1,6 +1,9 @@
+from typing import Any
+import random
+import time
 
 
-def write_maze(maze, config):
+def write_maze(maze: dict, config: dict):
     with open(config["OUTPUT_FILE"], 'w') as f:
 
         for row in maze["grid"]:
@@ -13,7 +16,7 @@ def write_maze(maze, config):
         f.write(f"{maze['path']}\n")
 
 
-def display_maze(maze, wall: str = "⬛", show_path: bool = False) -> None:
+def display_maze(maze: dict[str, Any], wall: str = "⬛", show_path: bool = False) -> None:
     grid = maze["grid"]
     rows = len(grid)
     cols = len(grid[0])
@@ -27,8 +30,8 @@ def display_maze(maze, wall: str = "⬛", show_path: bool = False) -> None:
 
     FLOOR = "⬜"
     ENTRY = "🟢"
-    EXIT  = "🔴"
-    PATH  = "🟦"
+    EXIT = "🔴"
+    PATH = "🟦"
 
     display = [[wall] * width for _ in range(height)]
 
@@ -81,7 +84,7 @@ def display_maze(maze, wall: str = "⬛", show_path: bool = False) -> None:
 
 
 
-def run_interactive(maze):
+def run_interactive(maze, generator):
     wall_colors = ["⬛", "🟫", "🟥", "🟩", "🟧", "🟪"]
     wall_index = 0
     path_visible = False
@@ -98,7 +101,8 @@ def run_interactive(maze):
         choice = input("choice? (1-4): ").strip()
 
         if choice == "1":
-            # current_maze = generator.generate()   ← plug in later
+            random.seed(time.time_ns())
+            maze = generator.generate_maze()
             path_visible = False
             display_maze(maze, wall=wall_colors[wall_index], show_path=path_visible)
         elif choice == "2":

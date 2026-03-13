@@ -1,5 +1,6 @@
 import sys
 
+
 def read_config(filename):
     config = {}
 
@@ -16,7 +17,6 @@ def read_config(filename):
                 key = key.strip()
                 value = value.strip()
 
-                # Convert types
                 if key in ("WIDTH", "HEIGHT"):
                     try:
                         value = int(value)
@@ -65,7 +65,7 @@ def validate_config(config):
     exit_x, exit_y = config["EXIT"]
 
     valid_entry = (0 <= entry_x < config["WIDTH"]) and (0 <= entry_y < config["HEIGHT"])
-    valid_exit  = (0 <= exit_x  < config["WIDTH"]) and (0 <= exit_y  < config["HEIGHT"])
+    valid_exit = (0 <= exit_x < config["WIDTH"]) and (0 <= exit_y < config["HEIGHT"])
 
     if not valid_entry:
         raise ValueError("ENTRY position out of bounds.")
