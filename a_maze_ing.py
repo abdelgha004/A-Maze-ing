@@ -14,7 +14,6 @@ def main():
 
 		config = read_config(config_file)
 		try:
-
 			validate_config(config)
 		except ValueError as e:
 			print(f"Error: {e}")
