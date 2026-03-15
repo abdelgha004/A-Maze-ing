@@ -2,9 +2,10 @@ from typing import Any
 import random
 import time
 from pathlib import Path
+from mazegen.generator import MazeGenerator
 
 
-def write_maze(maze: dict, config: dict):
+def write_maze(maze: dict, config: dict) -> None:
     output_dir = Path("OUTPUT")
     output_dir.mkdir(exist_ok=True)
     output_path = output_dir / config["OUTPUT_FILE"]
@@ -19,7 +20,9 @@ def write_maze(maze: dict, config: dict):
 
         f.write(f"{maze['path']}\n")
 
-def display_maze(maze: dict[str, Any], wall: str = "⬛", show_path: bool = False) -> None:
+
+def display_maze(maze: dict[str, Any], wall: str = "⬛",
+                 show_path: bool = False) -> None:
     grid = maze["grid"]
     rows = len(grid)
     cols = len(grid[0])
@@ -54,10 +57,14 @@ def display_maze(maze: dict[str, Any], wall: str = "⬛", show_path: bool = Fals
         r, c = entry
         path_cells.add((r, c))
         for step in path:
-            if step == 'N': r -= 1
-            elif step == 'S': r += 1
-            elif step == 'E': c += 1
-            elif step == 'W': c -= 1
+            if step == 'N':
+                r -= 1
+            elif step == 'S':
+                r += 1
+            elif step == 'E':
+                c += 1
+            elif step == 'W':
+                c -= 1
             path_cells.add((r, c))
 
     for r, row in enumerate(grid):
@@ -113,7 +120,7 @@ def display_maze(maze: dict[str, Any], wall: str = "⬛", show_path: bool = Fals
         print("".join(row))
 
 
-def run_interactive(maze, generator):
+def run_interactive(maze: dict, generator: MazeGenerator) -> None:
     wall_colors = ["⬛", "🟫", "🟥", "🟩", "🟪"]
     wall_index = 0
     path_visible = False
@@ -133,15 +140,18 @@ def run_interactive(maze, generator):
             random.seed(time.time_ns())
             maze = generator.generate_maze()
             path_visible = False
-            display_maze(maze, wall=wall_colors[wall_index], show_path=path_visible)
+            display_maze(maze, wall=wall_colors[wall_index],
+                         show_path=path_visible)
         elif choice == "2":
             path_visible = not path_visible
-            display_maze(maze, wall=wall_colors[wall_index], show_path=path_visible)
+            display_maze(maze, wall=wall_colors[wall_index],
+                         show_path=path_visible)
         elif choice == "3":
             wall_index += 1
             if wall_index >= len(wall_colors):
                 wall_index = 0
-            display_maze(maze, wall=wall_colors[wall_index], show_path=path_visible)
+            display_maze(maze, wall=wall_colors[wall_index],
+                         show_path=path_visible)
         elif choice == "4":
             print("Goodbye!")
             break

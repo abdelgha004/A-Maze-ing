@@ -1,7 +1,8 @@
 import sys
+from typing import Union
 
 
-def read_config(filename):
+def read_config(filename: str) -> dict:
 
     config = {}
     try:
@@ -14,51 +15,57 @@ def read_config(filename):
                     print(f"Error: invalid config line (missing '='):"
                           f"'{line}'")
                     sys.exit(1)
-                key, value = line.split("=", 1)
+                key, raw = line.split("=", 1)
                 key = key.strip().upper()
-                value = value.strip()
+                raw = raw.strip()
+                value: Union[str, int, bool, tuple[int, int]] = raw
 
                 if key in ("WIDTH", "HEIGHT"):
                     try:
-                        value = int(value)
-                        if key == "WIDTH" and value > 50:
+                        int_value = int(raw)
+                        if key == "WIDTH" and int_value > 50:
                             print(f"Error:'{key}' must be <= 50,"
-                                  f" got '{value}'")
+                                  f" got '{raw}'")
                             sys.exit(1)
-                        elif key == "HEIGHT" and value > 50:
+                        elif key == "HEIGHT" and int_value > 50:
                             print(f"Error:'{key}' must be <= 50,"
-                                  f" got '{value}'")
+                                  f" got '{raw}'")
                             sys.exit(1)
+                        value = int_value
                     except ValueError:
                         print(f"Error: '{key}' must be an integer,"
-                              f"got '{value}'")
+                              f"got '{raw}'")
                         sys.exit(1)
                 elif key in ("ENTRY", "EXIT"):
                     try:
-                        value = tuple(map(int, value.split(",")))
-                        if len(value) != 2:
+                        parts = tuple(map(int, raw.split(",")))
+                        if len(parts) != 2:
                             raise ValueError
+                        value = (parts[0], parts[1])
                     except ValueError:
                         print(f"Error: '{key}' must be a tuple of two integers"
-                              f" like '0,1', got '{value}'")
+                              f" like '0,1', got '{raw}'")
                         sys.exit(1)
                 elif key == "PERFECT":
-                    if value.lower() not in ("true", "false"):
+                    if raw.lower() not in ("true", "false"):
                         print(f"Error: 'PERFECT' must be 'true' or 'false',"
-                              f" got '{value}'")
+                              f" got '{raw}'")
                         sys.exit(1)
-                    value = value.lower() == "true"
+                    if raw.lower() == "true":
+                        value = True
+                    else:
+                        value = False
                 elif key == "SEED":
                     try:
-                        value = int(value)
+                        value = int(raw)
                     except ValueError:
                         print(f"Error: '{key}' must be an integer,"
-                              f"got '{value}'")
+                              f"got '{raw}'")
                         sys.exit(1)
                 elif key == "ALGORITHM":
-                    if value not in ("dfs", "DFS", "BT", "bt"):
+                    if raw not in ("dfs", "DFS", "BT", "bt"):
                         print(f"Error: '{key}' must be 'dfs' or 'bt',"
-                              f"got '{value}'")
+                              f"got '{raw}'")
                         sys.exit(1)
                 config[key] = value
         return config
@@ -71,7 +78,7 @@ def read_config(filename):
         sys.exit(1)
 
 
-def validate_config(config):
+def validate_config(config: dict) -> None:
 
     required_keys = ["WIDTH", "HEIGHT", "ENTRY", "EXIT", "OUTPUT_FILE",
                      "PERFECT"]
@@ -83,15 +90,16 @@ def validate_config(config):
         raise ValueError("OUTPUT_FILE cannot be empty.")
 
     if config["WIDTH"] <= 0 or config["HEIGHT"] <= 0:
-        raise ValueError("WIDTH and HEIGHT must be positive integers.")
+        raise ValueError("WIDTH and HEIGHT must be != 0"
+                         "and positive integers.")
 
-    entry_x, entry_y = config["ENTRY"]
-    exit_x, exit_y = config["EXIT"]
+    entry_r, entry_c = config["ENTRY"]
+    exit_r, exit_c = config["EXIT"]
 
-    valid_entry = (0 <= entry_x < config["WIDTH"]) and \
-        (0 <= entry_y < config["HEIGHT"])
-    valid_exit = (0 <= exit_x < config["WIDTH"]) and \
-        (0 <= exit_y < config["HEIGHT"])
+    valid_entry = (0 <= entry_r < config["HEIGHT"]) and \
+        (0 <= entry_c < config["WIDTH"])
+    valid_exit = (0 <= exit_r < config["HEIGHT"]) and \
+        (0 <= exit_c < config["WIDTH"])
 
     if not valid_entry:
         raise ValueError("ENTRY position out of bounds.")

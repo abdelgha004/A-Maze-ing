@@ -48,7 +48,7 @@ class MazeGenerator:
         if self.exit in self.patt_42:
             raise ValueError(f"Exit {self.exit} is inside the 42 pattern!")
 
-    def create_42(self):
+    def create_42(self) -> set:
         """ Creates 42 pattern in center of Maze"""
 
         center_r = self.height // 2
@@ -73,8 +73,10 @@ class MazeGenerator:
         digit_h = len(four)
         digit_w = len(four[0])
 
-        min_height = 5 + 2   # digit height + vertical padding
-        min_width = len(four[0]) + 1 + len(two[0]) + 4  # four_w + gap + two_w + horizontal padding
+        # digit height + vertical padding
+        min_height = 5 + 2
+        # four_w + gap + two_w + horizontal padding
+        min_width = len(four[0]) + 1 + len(two[0]) + 4
 
         if self.height < min_height or self.width < min_width:
             print(f"Warning: maze is too small ({self.width}x{self.height}) to"
@@ -99,8 +101,8 @@ class MazeGenerator:
                 if two[r][c] == "X":
                     pattern.add((top + r, left_two + c))
         return pattern
-    
-    def make_maze_not_perfect(self):
+
+    def make_maze_not_perfect(self) -> None:
         """ Making the Maze not perfect """
         num_cells = round((self.height * self.width) * 0.05)
         opened = 0
@@ -132,7 +134,7 @@ class MazeGenerator:
                 self.grid[nr][nc] &= ~self.opp_direction[direction]
                 opened += 1
 
-    def dfs_algo(self):
+    def dfs_algo(self) -> dict:
         """ Generate maze using DFS algo """
         self.grid = [
             [15 for _ in range(self.width)] for _ in range(self.height)
@@ -170,8 +172,8 @@ class MazeGenerator:
                 "path": self.solve_maze(),
                 "pattern_42": self.patt_42,
             }
-    
-    def binary_tree_algo(self):
+
+    def binary_tree_algo(self) -> dict:
         """ Generate maze using binary tree algorithm """
         self.grid = [[15 for _ in range(self.width)]
                      for _ in range(self.height)]
@@ -209,18 +211,18 @@ class MazeGenerator:
                 "path": self.solve_maze(),
                 "pattern_42": self.patt_42,
             }
-   
+
     def generate_maze(self,) -> dict:
         """ Backtracking DFS generator """
         if self.algo == "dfs":
-            return self.dfs_algo()   
+            return self.dfs_algo()
         elif self.algo == "bt":
             return self.binary_tree_algo()
         return {}
 
-    def solve_maze(self):
+    def solve_maze(self) -> str:
         """ Find shortest path using BFS"""
-        queue = deque()
+        queue: deque = deque()
         visited = [[False] * self.width for _ in range(self.height)]
         parent = {}
 
